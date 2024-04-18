@@ -1,0 +1,68 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 120hv;
+}
+
+.nav_bar {
+  height: 70px;
+}
+
+.alert {
+  color: red;
+}
+
+.root_login {
+  display: flex;
+  justify-content: center;
+  padding: 5%;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.label {
+  font-weight: 400;
+}
+
+.login_card {
+  width: 50%;
+  padding: 1%;
+}
+.login_title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  padding: 1%;
+}
+
+.login_txt {
+  margin-top: 10px;
+}
+.app_head {
+  text-align: center;
+}
+
+.root_table {
+  width: 80%;
+  height: 30%;
+  margin: auto;
+}
+
+.footer {
+  position: absolute;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #f6f5f2;
+  display: flex;
+  justify-content: center;
+}
+
+.footer p {
+  margin-top: 25px;
+  font-size: 20px;
+  color: black;
+}

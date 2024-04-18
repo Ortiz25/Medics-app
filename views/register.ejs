@@ -1,0 +1,61 @@
+<%-include("partials/headerN")-%>
+<div class="container root_login">
+  <div class="card login_card shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="card-body">
+      <h2 class="card-title login_title">Register</h2>
+      <% if (error ) { %>
+      <p class="alert"><%= error %></p>
+      <% } %>
+      <form action="/register" method="post">
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="doc_id"
+            name="doc_id"
+            required
+            placeholder="Doctor's ID"
+          />
+          <label for="username">Doctor's ID</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            required
+            placeholder="username"
+          />
+          <label for="username">Username</label>
+        </div>
+
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            required
+            name="password"
+            placeholder="password"
+          />
+          <label for="password">Password</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input
+            type="password"
+            class="form-control"
+            id="cpassword"
+            required
+            name="cpassword"
+            placeholder="confirm password"
+          />
+          <label for="cpassword">Confirm Password</label>
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Register</button>
+      </form>
+      <p class="login_txt">Already have an account? <a href="/">Login</a></p>
+    </div>
+  </div>
+</div>
+<%-include("partials/footer")-%>

@@ -1,0 +1,72 @@
+<%-include("partials/header")-%>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Load the variable from local storage
+    const appointmentId = localStorage.getItem("appointmentID");
+    const userId = localStorage.getItem("UserId");
+
+    // Check if the variable exists in local storage
+    if (appointmentId !== null) {
+      // Get the HTML element where you want to inject the variable
+      const myElement = document.getElementById("app_id");
+      const myElement1 = document.getElementById("user");
+
+
+      // Inject the variable into the HTML element
+      myElement.value = appointmentId;
+      myElement1.value = userId;
+    }
+  });
+</script>
+<div class="root_login">
+  <div class="card login_card shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="card-body">
+      <h1 class="card-title login_title">
+        Reschedule Appointment:</span>
+      </h1>
+      <form action="/edit" method="post">
+        <div class="mb-3">
+          <label for="app_id" class="form-label fw-bold">Appointment ID:</label>
+          <input
+            id="app_id"
+            type="text"
+            class="form-control disabled"
+            aria-describedby="emailHelp"
+            name="app_id"
+            readonly
+          />
+        </div>
+        <div class="mb-3">
+          <label for="user" class="form-label fw-bold">Patient ID:</label>
+          <input
+            id="user"
+            type="text"
+            class="form-control disabled"
+            aria-describedby="emailHelp"
+            name="user"
+            readonly
+          />
+        </div>
+        <div class="mb-3">
+          <label for="date" class="form-label fw-bold">Change Date:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            name="date"
+            aria-describedby="emailHelp"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label fw-bold">Change Time:</label>
+          <input type="time" id="time" name="time" class="form-control"  required/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%-include("partials/footer")-%>
