@@ -69,3 +69,19 @@ export async function getDocName(docId) {
     throw error;
   }
 }
+
+export async function createDoctor(docId, name, field, contact, location) {
+  try {
+    const newDoctor = await Doctor.create({
+      doctor_id: docId,
+      name: name,
+      type: field,
+      contact_info: contact,
+      location: location,
+    });
+    return newDoctor;
+  } catch (error) {
+    console.error("Error creating doctor:", error);
+    throw error;
+  }
+}

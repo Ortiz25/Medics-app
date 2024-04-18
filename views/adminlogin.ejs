@@ -1,37 +1,13 @@
 <%-include("partials/headerN")-%>
-<script>
-  // Function to add a class to an element
-  function addClass() {
-    const element = document.getElementById("username");
-    element.classList.add("is-invalid");
-  }
 
-  // Function to remove a class from an element
-  function removeClass() {
-    const element = document.getElementById("username");
-    element.classList.remove("is-invalid");
-  }
-
-  document.addEventListener("DOMContentLoaded", (event) => {
-    console.log(event);
-    const errorMessage = document.getElementById("error-message");
-    if (errorMessage) {
-      addClass();
-      console.log(event);
-    } else {
-      removeClass();
-      console.log(event);
-    }
-  });
-</script>
 <div class="container root_login">
   <div class="card login_card shadow-lg p-3 mb-5 bg-white rounded">
     <div class="card-body">
-      <h2 class="card-title login_title">Doctor Login</h2>
+      <h2 class="card-title login_title">Admin Login</h2>
       <% if (error ) { %>
       <p class="error-message alert"><%= error %></p>
       <% }%>
-      <form action="/login" method="post">
+      <form action="/admin" method="post">
         <div class="form-floating mb-3 is-invalid">
           <input
             type="text"
@@ -57,9 +33,7 @@
         </div>
         <button type="submit" class="btn btn-outline-primary">Login</button>
       </form>
-      <!-- <p class="login_txt">
-        Don't have an account? <a href="/register">Register</a>
-      </p> -->
+      <p class="login_txt">Go back to Doctor Login? <a href="/">Login</a></p>
     </div>
   </div>
 </div>

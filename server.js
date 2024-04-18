@@ -11,6 +11,7 @@ import {
   rescheduleAppointment,
   getUserPhoneNumber,
   getDocName,
+  createDoctor,
 } from "./util/helper.js";
 import Africastalking from "africastalking";
 
@@ -57,6 +58,13 @@ const docSchema = new mongoose.Schema({
 });
 const Doc = mongoose.model("Doc", docSchema);
 
+const adminSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+});
+
+const Admin = mongoose.model("Admin", adminSchema);
+
 // Define models
 export const User = sequelize.define("User", {
   user_id: {
@@ -67,19 +75,26 @@ export const User = sequelize.define("User", {
   name: DataTypes.STRING,
 });
 
-export const Doctor = sequelize.define("Doctor", {
-  doctor_id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: DataTypes.STRING,
-  username: {
+export const Doctor = sequelize.define(
+  "Doctor",
+  {
+    doctor_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: DataTypes.STRING,
+    contact_info: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     type: DataTypes.STRING,
-    unique: true,
+    location: DataTypes.STRING,
   },
-  password: DataTypes.STRING,
-});
+  {
+    timestamps: false,
+  }
+);
 
 export const Appointment = sequelize.define(
   "Appointment",
@@ -96,7 +111,7 @@ export const Appointment = sequelize.define(
     status: DataTypes.STRING,
   },
   {
-    timestamps: false, // Disable timestamps for Appointment model
+    timestamps: false,
   }
 );
 
@@ -121,6 +136,29 @@ app.use(
 // Route to render the login page
 app.get("/", (req, res) => {
   res.render("login", { error: null });
+});
+app.get("/admin", async (req, res) => {
+  const token = req.cookies.jwt;
+
+  try {
+    if (!token) {
+      return res.render("adminlogin", { error: "" });
+    }
+    // Verify JWT
+    await jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        // Clear the JWT cookie
+        res.clearCookie("jwt");
+        // JWT verification failed
+        return res.render("adminlogin", { error: "Session expired!" });
+      }
+
+      res.render("register", { error: "" });
+    });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 app.get("/register", (req, res) => {
@@ -168,6 +206,90 @@ app.get("/editapp", async (req, res) => {
   }
 });
 
+// Route to render the dashboard page
+app.get("/dashboard", async (req, res) => {
+  // Retrieve JWT from cookie
+  const token = req.cookies.jwt;
+
+  try {
+    // Verify JWT
+    await jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+
+      const appointments = await Appointment.findAll({
+        where: { doctor_id: decoded.docId },
+        include: [
+          { model: Doctor, as: "Doctor", attributes: ["name"] },
+          { model: User, as: "User", attributes: ["name"] },
+        ],
+      });
+
+      // JWT verification successful, render dashboard
+      res.render("index", { appointments });
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/admindash", async (req, res) => {
+  // Retrieve JWT from cookie
+  const token = req.cookies.jwt;
+
+  try {
+    // Verify JWT
+    await jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+
+      const doctors = await Doctor.findAll({
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      });
+      console.log(doctors);
+
+      // JWT verification successful, render dashboard
+      res.render("admindash", { doctors });
+    });
+  } catch (error) {
+    console.error("Error fetching Doctors:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/filter", async (req, res) => {
+  // Retrieve JWT from cookie
+  const token = req.cookies.jwt;
+  const data = req.session.data;
+
+  try {
+    const appointments = await Appointment.findAll({
+      include: [
+        { model: Doctor, as: "Doctor", attributes: ["name"] },
+        { model: User, as: "User", attributes: ["name"] },
+      ],
+    });
+
+    // Verify JWT
+    await jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+      // JWT verification successful, render dashboard
+      res.render("allapp", { appointments });
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // Route to handle login form submission
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -206,7 +328,26 @@ app.post("/login", async (req, res) => {
 
 // Route to handle registration form submission
 app.post("/register", async (req, res) => {
-  const { username, password, cpassword, doc_id } = req.body;
+  const {
+    username,
+    name,
+    field,
+    contact,
+    location,
+    password,
+    cpassword,
+    docId,
+  } = req.body;
+  console.log(
+    username,
+    name,
+    field,
+    contact,
+    location,
+    password,
+    cpassword,
+    docId
+  );
 
   try {
     if (password !== cpassword) {
@@ -221,77 +362,21 @@ app.post("/register", async (req, res) => {
     // Find the doctor with the provided username
     const doctor = await Doc.findOne({ username: username });
     if (doctor) {
-      return res.render("register", { error: "User exits! Go to login!" });
+      return res.render("register", { error: "Username exits!" });
     }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new doctor with the hashed password
-    await Doc.create({ username, password: hashedPassword, Doctor_id: doc_id });
+    await Doc.create({ username, password: hashedPassword, Doctor_id: docId });
 
-    // Redirect to the dashboard page if authentication is successful
-    res.render("login", { error: "" });
+    await createDoctor(docId, name, field, contact, location);
+
+    // Redirect to the dashboard page if doctor creation  is successful
+    res.redirect("/admindash");
   } catch (error) {
-    console.error("Error logging in:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
-// Route to render the dashboard page
-app.get("/dashboard", async (req, res) => {
-  // Retrieve JWT from cookie
-  const token = req.cookies.jwt;
-
-  try {
-    // Verify JWT
-    await jwt.verify(token, secretKey, async (err, decoded) => {
-      if (err) {
-        // JWT verification failed
-        return res.redirect("/logout");
-      }
-
-      const appointments = await Appointment.findAll({
-        where: { doctor_id: decoded.docId },
-        include: [
-          { model: Doctor, as: "Doctor", attributes: ["name"] },
-          { model: User, as: "User", attributes: ["name"] },
-        ],
-      });
-
-      // JWT verification successful, render dashboard
-      res.render("index", { appointments });
-    });
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
-
-app.get("/filter", async (req, res) => {
-  // Retrieve JWT from cookie
-  const token = req.cookies.jwt;
-  const data = req.session.data;
-
-  try {
-    const appointments = await Appointment.findAll({
-      include: [
-        { model: Doctor, as: "Doctor", attributes: ["name"] },
-        { model: User, as: "User", attributes: ["name"] },
-      ],
-    });
-
-    // Verify JWT
-    await jwt.verify(token, secretKey, (err, decoded) => {
-      if (err) {
-        // JWT verification failed
-        return res.redirect("/logout");
-      }
-      // JWT verification successful, render dashboard
-      res.render("allapp", { appointments });
-    });
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
+    console.error("Error Registering Doctor:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -330,6 +415,38 @@ app.post("/edit", async (req, res) => {
 
       // JWT verification successful, render dashboard
       res.redirect("/dashboard");
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/admin", async (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password);
+  try {
+    // Find the doctor with the provided username
+    const admin = await Admin.findOne({ username: username });
+    if (!admin) {
+      return res.render("adminlogin", { error: "Admin User does not exist!" });
+    }
+
+    // Verify the password
+    await bcrypt.compare(password, admin.password, function (err, result) {
+      if (!result) {
+        return res.render("adminlogin", { error: "Incorrect password" });
+      }
+
+      // If credentials are valid, generate JWT token
+      const token = jwt.sign({ username: admin.username }, secretKey, {
+        expiresIn: "1h",
+      });
+
+      res.cookie("jwt", token);
+
+      // Set the JWT as a cookie
+      res.render("register", { error: "" });
     });
   } catch (error) {
     console.error("Error fetching appointments:", error);

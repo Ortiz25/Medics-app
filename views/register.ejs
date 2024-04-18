@@ -1,60 +1,127 @@
-<%-include("partials/headerN")-%>
+<%-include("partials/headeradmin")-%>
 <div class="container root_login">
   <div class="card login_card shadow-lg p-3 mb-5 bg-white rounded">
     <div class="card-body">
-      <h2 class="card-title login_title">Register</h2>
+      <h2 class="card-title login_title">Doctor Registration</h2>
       <% if (error ) { %>
       <p class="alert"><%= error %></p>
       <% } %>
       <form action="/register" method="post">
-        <div class="form-floating mb-3">
-          <input
-            type="text"
-            class="form-control"
-            id="doc_id"
-            name="doc_id"
-            required
-            placeholder="Doctor's ID"
-          />
-          <label for="username">Doctor's ID</label>
+        <div class="row g-2 mb-3">
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="docId"
+                name="docId"
+                required
+              />
+              <label for="docId">Doctor's ID</label>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                required
+              />
+              <label for="name">Doctor's Name</label>
+            </div>
+          </div>
         </div>
-        <div class="form-floating mb-3">
-          <input
-            type="text"
-            class="form-control"
-            id="username"
-            name="username"
-            required
-            placeholder="username"
-          />
-          <label for="username">Username</label>
+        <div class="row g-2 mb-3">
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required
+              />
+              <label for="username">Username</label>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <select
+                class="form-select"
+                id="field"
+                aria-label="Floating label select example"
+                name="field"
+              >
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Orthopedist">Orthopedist</option>
+                <option value="Optician">Optician</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Optician">Optician</option>
+                <option value="Gynaecologist">Gynaecologist</option>
+                <option value="Neurologist">Neurologist</option>
+              </select>
+              <label for="field">Field of Practice</label>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+              <label for="password">Password</label>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="cpassword"
+                name="cpassword"
+                required
+              />
+              <label for="cpassword">Confirm Password</label>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="contact"
+                name="contact"
+                required
+              />
+              <label for="contact">Contact</label>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="location"
+                name="location"
+                required
+              />
+              <label for="location">Location</label>
+            </div>
+          </div>
         </div>
 
-        <div class="form-floating mb-3">
-          <input
-            type="password"
-            class="form-control"
-            id="password"
-            required
-            name="password"
-            placeholder="password"
-          />
-          <label for="password">Password</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input
-            type="password"
-            class="form-control"
-            id="cpassword"
-            required
-            name="cpassword"
-            placeholder="confirm password"
-          />
-          <label for="cpassword">Confirm Password</label>
-        </div>
         <button type="submit" class="btn btn-outline-primary">Register</button>
       </form>
-      <p class="login_txt">Already have an account? <a href="/">Login</a></p>
+      <!-- <p class="login_txt">Already have an account? <a href="/">Login</a></p> -->
     </div>
   </div>
 </div>
