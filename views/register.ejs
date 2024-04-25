@@ -12,12 +12,12 @@
             <div class="form-floating">
               <input
                 type="text"
-                class="form-control"
+                class="form-control fw-bold"
                 id="docId"
                 name="docId"
-                required
+                readonly
               />
-              <label for="docId">Doctor's ID</label>
+              <label for="docId" class="fw-bold">Doctor's ID</label>
             </div>
           </div>
           <div class="col-md">
@@ -29,7 +29,7 @@
                 name="name"
                 required
               />
-              <label for="name">Doctor's Name</label>
+              <label for="name" class="fw-bold">Doctor's Name</label>
             </div>
           </div>
         </div>
@@ -43,7 +43,7 @@
                 name="username"
                 required
               />
-              <label for="username">Username</label>
+              <label for="username" class="fw-bold">Username</label>
             </div>
           </div>
           <div class="col-md">
@@ -62,7 +62,7 @@
                 <option value="Gynaecologist">Gynaecologist</option>
                 <option value="Neurologist">Neurologist</option>
               </select>
-              <label for="field">Field of Practice</label>
+              <label for="field" class="fw-bold">Field of Practice</label>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
                 name="password"
                 required
               />
-              <label for="password">Password</label>
+              <label for="password" class="fw-bold">Password</label>
             </div>
           </div>
           <div class="col-md">
@@ -88,7 +88,7 @@
                 name="cpassword"
                 required
               />
-              <label for="cpassword">Confirm Password</label>
+              <label for="cpassword" class="fw-bold">Confirm Password</label>
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@
                 name="contact"
                 required
               />
-              <label for="contact">Contact</label>
+              <label for="contact" class="fw-bold">Contact</label>
             </div>
           </div>
           <div class="col-md">
@@ -114,7 +114,7 @@
                 name="location"
                 required
               />
-              <label for="location">Location</label>
+              <label for="location" class="fw-bold">Location</label>
             </div>
           </div>
         </div>
@@ -125,4 +125,16 @@
     </div>
   </div>
 </div>
+<script>
+  function getCookieValue(name) {
+    const regex = new RegExp(`(^| )${name}=([^;]+)`);
+    const match = document.cookie.match(regex);
+    if (match) {
+      return match[2];
+    }
+  }
+  const docId = document.getElementById("docId");
+  console.log(docId);
+  docId.value = +getCookieValue("docid") + 1;
+</script>
 <%-include("partials/footer")-%>

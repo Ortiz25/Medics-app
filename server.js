@@ -12,6 +12,7 @@ import {
   getUserPhoneNumber,
   getDocName,
   createDoctor,
+  getLastDoctorId,
 } from "./util/helper.js";
 import Africastalking from "africastalking";
 
@@ -36,11 +37,16 @@ const credentials = {
 const sms = Africastalking(credentials).SMS;
 
 // mysql Database connection
-const sequelize = new Sequelize("medicare", "node", "m0t0m0t0", {
-  host: process.env.MYSQLDB_HOST,
-  dialect: "mysql",
-  port: process.env.PORT,
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
+  {
+    host: process.env.MYSQLDB_HOST,
+    dialect: "mysql",
+    port: process.env.PORT,
+  }
+);
 
 // mongodb Database connection
 main().catch((err) => console.log(err));
@@ -137,6 +143,7 @@ app.use(
 app.get("/", (req, res) => {
   res.render("login", { error: null });
 });
+
 app.get("/admin", async (req, res) => {
   const token = req.cookies.jwt;
 
@@ -302,7 +309,6 @@ app.post("/login", async (req, res) => {
     // Verify the password
     await bcrypt.compare(password, doctor.password, function (err, result) {
       if (!result) {
-        console.log("result", result);
         return res.render("login", { error: "Invalid username or password" });
       }
 
@@ -424,7 +430,7 @@ app.post("/edit", async (req, res) => {
 
 app.post("/admin", async (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password);
+
   try {
     // Find the doctor with the provided username
     const admin = await Admin.findOne({ username: username });
@@ -433,21 +439,27 @@ app.post("/admin", async (req, res) => {
     }
 
     // Verify the password
-    await bcrypt.compare(password, admin.password, function (err, result) {
-      if (!result) {
-        return res.render("adminlogin", { error: "Incorrect password" });
+    await bcrypt.compare(
+      password,
+      admin.password,
+      async function (err, result) {
+        if (!result) {
+          return res.render("adminlogin", { error: "Incorrect password" });
+        }
+        const docId = await getLastDoctorId();
+
+        // If credentials are valid, generate JWT token
+        const token = jwt.sign({ username: admin.username }, secretKey, {
+          expiresIn: "1h",
+        });
+
+        res.cookie("jwt", token);
+        res.cookie("docid", docId);
+
+        // Set the JWT as a cookie
+        res.render("register", { error: "" });
       }
-
-      // If credentials are valid, generate JWT token
-      const token = jwt.sign({ username: admin.username }, secretKey, {
-        expiresIn: "1h",
-      });
-
-      res.cookie("jwt", token);
-
-      // Set the JWT as a cookie
-      res.render("register", { error: "" });
-    });
+    );
   } catch (error) {
     console.error("Error fetching appointments:", error);
     res.status(500).send("Internal Server Error");

@@ -85,3 +85,20 @@ export async function createDoctor(docId, name, field, contact, location) {
     throw error;
   }
 }
+
+export async function getLastDoctorId() {
+  try {
+    const lastDoctor = await Doctor.findOne({
+      attributes: ["doctor_id"],
+      order: [["doctor_id", "DESC"]],
+    });
+    if (lastDoctor) {
+      return lastDoctor.doctor_id;
+    } else {
+      return null; // No doctors found
+    }
+  } catch (error) {
+    console.error("Error fetching last doctor ID:", error);
+    throw error;
+  }
+}
