@@ -83,8 +83,9 @@
     console.log("clicked-1");
     myElement.setAttribute("disabled", "")
     myElement.innerText = "canceling..."
+    console.log(formData);
         console.log("disabled attriburte set");
-     const response = await fetch("/cancelAppointment", {
+     const response = await fetch("https://ussd.livecribauth.com/cancelAppointment", {
           method: "POST",
           headers: {
       "Content-Type": "application/json",
