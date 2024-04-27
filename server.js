@@ -13,6 +13,7 @@ import {
   getDocName,
   createDoctor,
   getLastDoctorId,
+  cancelAppointment,
 } from "./util/helper.js";
 import Africastalking from "africastalking";
 
@@ -344,16 +345,6 @@ app.post("/register", async (req, res) => {
     cpassword,
     docId,
   } = req.body;
-  console.log(
-    username,
-    name,
-    field,
-    contact,
-    location,
-    password,
-    cpassword,
-    docId
-  );
 
   try {
     if (password !== cpassword) {
@@ -430,6 +421,7 @@ app.post("/edit", async (req, res) => {
 
 app.post("/admin", async (req, res) => {
   const { username, password } = req.body;
+  console.log(req, req.body, req.headers);
 
   try {
     // Find the doctor with the provided username
@@ -463,6 +455,43 @@ app.post("/admin", async (req, res) => {
   } catch (error) {
     console.error("Error fetching appointments:", error);
     res.status(500).send("Internal Server Error");
+  }
+});
+app.post("/cancelAppointment", async (req, res) => {
+  const { appointmentId, userId } = req.body;
+  const token = req.cookies.jwt;
+  console.log(token);
+  try {
+    // Verify JWT
+    await jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+      //update appointments table
+      await cancelAppointment(appointmentId);
+
+      // send text to patient/ user about the  cancelation
+      const userPhone = await getUserPhoneNumber(userId);
+      const docName = await getDocName(decoded.docId);
+      const options = {
+        to: [userPhone],
+        message: `Appointment Canceled with ${docName}`,
+      };
+      async function sendSMS() {
+        try {
+          const result = await sms.send(options);
+          console.log(result);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      sendSMS();
+
+      res.status(200).json({ message: "appointment canceled" });
+    });
+  } catch (error) {
+    console.log(error);
   }
 });
 

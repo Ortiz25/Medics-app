@@ -1,5 +1,18 @@
 import { Appointment, User, Doctor } from "../server.js";
 
+export async function cancelAppointment(id) {
+  try {
+    await Appointment.destroy({
+      where: {
+        appointment_id: id,
+      },
+    });
+    console.log("Appointment deleted successfully.");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function rescheduleAppointment(
   userId,
   appointmentId,

@@ -3,9 +3,9 @@
 <div class="root_app">
   <h1 class="app_head">Doctors</h1>
   <div class="table-responsive">
-    <table class="table table-hover table-bordered root_table">
-      <thead>
-        <tr>
+    <table class="table table-hover align-middle table-bordered root_table">
+      <thead class="table-light">
+        <tr class="fw-bold">
           <th scope="col">Doctor ID</th>
           <th scope="col">Name</th>
           <th scope="col">Field of Practice</th>
@@ -13,7 +13,7 @@
           <th scope="col">Location</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="table-group-divider">
         <% doctors.forEach(doctor => { %>
         <tr>
           <th scope="row"><%= doctor.doctor_id %></th>

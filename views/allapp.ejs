@@ -3,7 +3,7 @@
 <div class="root_app">
   <h1 class="app_head">All Appointments</h1>
   <div class="table-responsive">
-    <table class="table table-hover table-bordered root_table">
+    <table class="table table-hover table-sm table-bordered root_table">
       <thead>
         <tr>
           <th scope="col">Appointment ID</th>
@@ -16,7 +16,7 @@
           <th scope="col">Status</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="table-group-divider">
         <% appointments.forEach(appointment => { %>
         <tr>
           <th scope="row"><%= appointment.appointment_id %></th>
@@ -33,5 +33,8 @@
     </table>
   </div>
 </div>
+<script>
+  console.log(appointments);
+</script>
 
 <%-include("partials/footer")-%>
