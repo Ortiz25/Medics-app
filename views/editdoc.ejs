@@ -121,7 +121,7 @@
     console.log("clicked-1", myElement);
     myElement.setAttribute("disabled", "")
     myElement.innerText = "Deregistering..."
-     const response = await fetch("http://localhost:4000/deregesterDoc", {
+     const response = await fetch("https://ussd.livecribauth.com/deregesterDoc", {
           method: "POST",
           headers: {
       "Content-Type": "application/json",
