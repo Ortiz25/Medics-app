@@ -3,14 +3,18 @@
 <div class="root_app">
   <h1 class="app_head">Doctors</h1>
   <div class="table-responsive">
-    <table class="table table-hover align-middle table-bordered root_table">
+    <table
+      id="myTable"
+      class="table table-hover align-middle table-bordered root_table"
+    >
       <thead class="table-light">
         <tr class="fw-bold">
           <th scope="col">Doctor ID</th>
-          <th scope="col">Name</th>
+          <th scope="col">Doctor's Name</th>
           <th scope="col">Field of Practice</th>
           <th scope="col">Contact Info</th>
           <th scope="col">Location</th>
+          <th scope="col">Action</th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
@@ -21,11 +25,56 @@
           <td><%= doctor.type%></td>
           <td><%= doctor.contact_info %></td>
           <td><%= doctor.location %></td>
+          <td>
+            <button
+              type="button"
+              class="action-button edit-btn btn btn-primary"
+            >
+              Update
+            </button>
+          </td>
         </tr>
         <% }); %>
       </tbody>
     </table>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Add event listener to the table body
+    document
+      .getElementById("myTable")
+      .addEventListener("click", function (event) {
+        // Check if the clicked element is an edit button
+
+        if (event.target.classList.contains("edit-btn")) {
+          // Find the closest row to the clicked button
+          const row = event.target.closest("tr");
+          // Get the index of the row
+          const rowIndex = row.rowIndex; // Subtract 1 to account for header row
+
+          // Call the editRow function with the dynamic rowIndex
+          editRow(rowIndex);
+        }
+      });
+  });
+  function editRow(rowIndex) {
+    const table = document.getElementById("myTable");
+    const row = table.rows[rowIndex];
+    const doctorId = row.cells[0].innerText;
+    const doctorName = row.cells[1].innerText;
+    const doctorField = row.cells[2].innerText;
+    const doctorContact = row.cells[3].innerText;
+    const doctorLocation = row.cells[4].innerText;
+    console.log(doctorId);
+    localStorage.setItem("doctorId", doctorId);
+    localStorage.setItem("doctorName", doctorName);
+    localStorage.setItem("doctorField", doctorField);
+    localStorage.setItem("doctorContact", doctorContact);
+    localStorage.setItem("doctorLocation", doctorLocation);
+
+    window.location.href = "/editdoc";
+  }
+</script>
 
 <%-include("partials/footer")-%>

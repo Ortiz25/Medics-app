@@ -1,0 +1,147 @@
+<%-include("partials/headeradmin")-%>
+
+<div class="root_login">
+  <div class="card register shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="card-body">
+      <h1 class="card-title login_title">
+        Update/Deregister Doctor:</span>
+      </h1>
+      <form action="/editdoc" method="post">
+        <div class="mb-3">
+          <label for="doc_id" class="form-label fw-bold">Doctor ID:</label>
+          <input
+            id="doc_id"
+            type="text"
+            class="form-control disabled"
+            aria-describedby="emailHelp"
+            name="doc_id"
+            readonly
+          />
+        </div>
+        <div class="mb-3">
+          <label for="name" class="form-label fw-bold">Doctor's Name:</label>
+          <input
+            id="name"
+            type="text"
+            class="form-control disabled"
+            aria-describedby="emailHelp"
+            name="name"
+          />
+        </div>
+        <div class="col-sm">
+            <div class="form-floating">
+              <select
+                class="form-select"
+                id="field"
+                aria-label="Floating label select example"
+                name="field"
+              >
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Orthopedist">Orthopedist</option>
+                <option value="Optician">Optician</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Optician">Optician</option>
+                <option value="Gynaecologist">Gynaecologist</option>
+                <option value="Neurologist">Neurologist</option>
+              </select>
+              <label for="field" class="fw-bold">Field of Practice</label>
+            </div>
+          </div>
+        <div class="mb-3">
+            <label for="contact" class="form-label fw-bold">Contact Info:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="contact"
+              name="contact"
+              aria-describedby="emailHelp"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="location" class="form-label fw-bold">Location:</label>
+            <input
+              type="text"
+              class="form-control"
+              id="location"
+              name="location"
+              aria-describedby="emailHelp"
+              required
+            />
+          </div>
+
+        <button type="submit" class="btn btn-primary">update</button>
+        <button id="btn-cancel" type="button" class="btn btn-outline-danger btn-cancel"  ><a href="#" id="deregister"  onclick="deregister()" class="text-danger ">Deregister</a></button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Load the variable from local storage
+    const doctorId = localStorage.getItem("doctorId");
+    const doctorName = localStorage.getItem("doctorName");
+    const doctorField = localStorage.getItem("doctorField");
+    const doctorContact = localStorage.getItem("doctorContact");
+    const doctorLocation = localStorage.getItem("doctorLocation");
+   // const userId = localStorage.getItem("UserId");
+       console.log("doctor Id", doctorId);
+    // Check if the variable exists in local storage
+    if (doctorId !== null) {
+        console.log("exist");
+      // Get the HTML element where you want to inject the variable
+      const myElement = document.getElementById("doc_id");
+      const myElement1 = document.getElementById("name");
+      const myElement2 = document.getElementById("field");
+      const myElement3 = document.getElementById("contact");
+      const myElement4 = document.getElementById("location");
+
+
+      // Inject the variable into the HTML element
+      myElement.value = doctorId;
+      myElement1.value = doctorName
+      myElement2.value = doctorField
+      myElement3.value = doctorContact
+      myElement4.value = doctorLocation
+      
+    }
+  });
+
+ async  function deregister(){
+    
+    const myElement = document.getElementById("deregister");
+
+     const docId = localStorage.getItem("doctorId");
+    // const myElement = document.getElementById("btn-cancel");
+
+    // Construct a FormData instance
+    const formData = {doctorId: docId}
+      
+   try{
+    console.log("clicked-1", myElement);
+    myElement.setAttribute("disabled", "")
+    myElement.innerText = "Deregistering..."
+     const response = await fetch("/deregesterDoc", {
+          method: "POST",
+          headers: {
+      "Content-Type": "application/json",
+    },
+      body:JSON.stringify(formData)
+    });
+     const data = await response.json();
+     console.log(data);
+      if(data.message){
+         myElement.removeAttribute("disabled")
+         myElement.innerText = "deregister"
+         window.location.href = "/admindash"; 
+       }
+      }catch(error){
+        console.log(error);
+      }
+
+    
+
+  }
+</script>
+
+<%-include("partials/footer")-%>

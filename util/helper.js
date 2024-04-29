@@ -1,5 +1,45 @@
 import { Appointment, User, Doctor } from "../server.js";
 
+export async function deregisterDoctor(id) {
+  try {
+    await Appointment.destroy({
+      where: {
+        doctor_id: id,
+      },
+    });
+    console.log("Appointment deleted successfully.");
+    await Doctor.destroy({
+      where: {
+        doctor_id: id,
+      },
+    });
+
+    console.log("Doctor derigestered");
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateDoctor(id, name, field, contact, location) {
+  try {
+    await Doctor.update(
+      {
+        name: name,
+        type: field,
+        contact_info: contact,
+        location: location,
+      },
+      {
+        where: {
+          doctor_id: id,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function cancelAppointment(id) {
   try {
     await Appointment.destroy({

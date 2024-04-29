@@ -1,6 +1,6 @@
 <%-include("partials/headeradmin")-%>
 <div class="container root_login">
-  <div class="card login_card shadow-lg p-3 mb-5 bg-white rounded">
+  <div class="card shadow-lg p-3 mb-5 bg-white rounded register">
     <div class="card-body">
       <h2 class="card-title login_title">Doctor Registration</h2>
       <% if (error ) { %>
@@ -8,7 +8,7 @@
       <% } %>
       <form action="/register" method="post">
         <div class="row g-2 mb-3">
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="text"
@@ -20,7 +20,7 @@
               <label for="docId" class="fw-bold">Doctor's ID</label>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="text"
@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="row g-2 mb-3">
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="text"
@@ -46,7 +46,7 @@
               <label for="username" class="fw-bold">Username</label>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <select
                 class="form-select"
@@ -67,7 +67,7 @@
           </div>
         </div>
         <div class="row g-2 mb-3">
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="password"
@@ -79,7 +79,7 @@
               <label for="password" class="fw-bold">Password</label>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="password"
@@ -93,7 +93,7 @@
           </div>
         </div>
         <div class="row g-2 mb-3">
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="text"
@@ -105,7 +105,7 @@
               <label for="contact" class="fw-bold">Contact</label>
             </div>
           </div>
-          <div class="col-md">
+          <div class="col-lg">
             <div class="form-floating">
               <input
                 type="text"
@@ -126,15 +126,19 @@
   </div>
 </div>
 <script>
-  function getCookieValue(name) {
-    const regex = new RegExp(`(^| )${name}=([^;]+)`);
-    const match = document.cookie.match(regex);
-    if (match) {
-      return match[2];
+  async function getCookieValue(name) {
+    // const regex = new RegExp(`(^| )${name}=([^;]+)`);
+    // const match = document.cookie.match(regex);
+    const docId = document.getElementById("docId");
+    try {
+      const response = await fetch("/docIdNum");
+      const data = await response.json();
+      console.log(data);
+      docId.value = +data.number + 1;
+    } catch (error) {
+      console.log(error);
     }
   }
-  const docId = document.getElementById("docId");
-  console.log(docId);
-  docId.value = +getCookieValue("docid") + 1;
+  getCookieValue();
 </script>
 <%-include("partials/footer")-%>

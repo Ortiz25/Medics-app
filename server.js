@@ -14,6 +14,8 @@ import {
   createDoctor,
   getLastDoctorId,
   cancelAppointment,
+  updateDoctor,
+  deregisterDoctor,
 } from "./util/helper.js";
 import Africastalking from "africastalking";
 
@@ -173,6 +175,16 @@ app.get("/register", (req, res) => {
   res.render("register", { error: null });
 });
 
+app.get("/docIdNum", async (req, res) => {
+  try {
+    const docId = await getLastDoctorId();
+    console.log(docId);
+    res.status(200).json({ number: docId });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.get("/logout", async (req, res) => {
   const token = req.cookies.jwt;
 
@@ -207,6 +219,25 @@ app.get("/editapp", async (req, res) => {
       }
       // JWT verification successful, render dashboard
       res.render("editapp");
+    });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/editdoc", async (req, res) => {
+  const token = req.cookies.jwt;
+
+  try {
+    // Verify JWT
+    await jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+      // JWT verification successful, render dashboard
+      res.render("editdoc");
     });
   } catch (error) {
     console.error("Error logging in:", error);
@@ -419,9 +450,49 @@ app.post("/edit", async (req, res) => {
   }
 });
 
+app.post("/editdoc", async (req, res) => {
+  const { doc_id, name, contact, location, field } = req.body;
+  const token = req.cookies.jwt;
+  console.log(doc_id, name, contact, location, token);
+
+  try {
+    // Verify JWT
+    await jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+      const date = new Date();
+
+      //update appointments table
+      await updateDoctor(doc_id, name, field, contact, location);
+
+      // send text to patient/ user about the reschedule
+      const options = {
+        to: [contact],
+        message: `Your Doctor-Info updated Successfully on  ${date.getFullYear()}-${date.getMonth()}-${date.getDay()} at ${date.getTime()}`,
+      };
+      async function sendSMS() {
+        try {
+          const result = await sms.send(options);
+          console.log(result);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+      sendSMS();
+
+      // JWT verification successful, render dashboard
+      res.redirect("/admindash");
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.post("/admin", async (req, res) => {
   const { username, password } = req.body;
-  console.log(req, req.body, req.headers);
 
   try {
     // Find the doctor with the provided username
@@ -460,7 +531,6 @@ app.post("/admin", async (req, res) => {
 app.post("/cancelAppointment", async (req, res) => {
   const { appointmentId, userId } = req.body;
   const token = req.cookies.jwt;
-  console.log(token);
   try {
     // Verify JWT
     await jwt.verify(token, secretKey, async (err, decoded) => {
@@ -495,8 +565,32 @@ app.post("/cancelAppointment", async (req, res) => {
   }
 });
 
+app.post("/deregesterDoc", async (req, res) => {
+  const { doctorId } = req.body;
+  const token = req.cookies.jwt;
+  try {
+    // Verify JWT
+    await jwt.verify(token, secretKey, async (err, decoded) => {
+      if (err) {
+        // JWT verification failed
+        return res.redirect("/logout");
+      }
+      //update appointments table
+      await Doc.findOneAndDelete({
+        Doctor_id: doctorId,
+      });
+      await deregisterDoctor(doctorId);
+
+      res.status(200).json({ message: "Doctor Deregistered" });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // Start the server
 const PORT = 4000;
-app.listen(PORT, () => {
+const HOST = "0.0.0.0";
+app.listen(PORT, HOST, () => {
   console.log(`Server is running on port ${PORT}`);
 });
