@@ -450,7 +450,7 @@ app.post("/edit", async (req, res) => {
   }
 });
 
-app.post("http://ussd.livecribauth.com/editdoc", async (req, res) => {
+app.post("http://localhost:4000/editdoc", async (req, res) => {
   const { doc_id, name, contact, location, field } = req.body;
   const token = req.cookies.jwt;
   console.log(doc_id, name, contact, location, token);
