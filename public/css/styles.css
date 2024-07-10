@@ -94,6 +94,10 @@
 }
 
 @media (max-width: 768px) {
+  .root_app {
+    margin-bottom: 20%;
+    position: relative;
+  }
   .login_title {
     font-size: 25px;
   }
@@ -107,24 +111,10 @@
   .footer {
     margin-top: 15px;
   }
-  .page-container {
-    min-height: 115vh;
-  }
+
   .app_head {
     font-size: 20px;
   }
-}
-
-@media (max-width: 992px) {
-  .register {
-    width: 95%;
-  }
-  .page-container {
-    min-height: 120vh;
-  }
-}
-
-@media (max-width: 768px) {
   .all_header {
     text-align: center;
     width: 100%;
@@ -133,5 +123,15 @@
     width: 80%;
     height: 5%;
     margin-right: auto;
+  }
+}
+
+@media (max-width: 992px) {
+  .root_app {
+    margin-bottom: 20%;
+    position: relative;
+  }
+  .register {
+    width: 95%;
   }
 }
