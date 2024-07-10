@@ -1,7 +1,22 @@
 <%-include("partials/header")-%>
 
 <div class="root_app">
-  <h1 class="app_head">All Appointments</h1>
+  <div class="container top_bar">
+    <div class="row">
+      <div class="col-sm-8 text-end all_header">
+        <h1 class="app_head">All Appointments</h1>
+      </div>
+      <div class="col-sm-4 input-group search_bar mt-2">
+        <div class="form-outline" data-mdb-input-init>
+          <input type="search" id="form1" class="form-control" />
+          <label class="form-label" for="form1">Search</label>
+        </div>
+        <!-- <button type="button" class="btn btn-primary" data-mdb-ripple-init>
+          <i class="fas fa-search"></i>
+        </button> -->
+      </div>
+    </div>
+  </div>
   <div class="table-responsive">
     <table class="table table-hover table-sm table-bordered root_table">
       <thead>
@@ -16,7 +31,7 @@
           <th scope="col">Status</th>
         </tr>
       </thead>
-      <tbody class="table-group-divider">
+      <tbody class="table-group-divider" id="table">
         <% appointments.forEach(appointment => { %>
         <tr>
           <th scope="row"><%= appointment.appointment_id %></th>
@@ -33,6 +48,16 @@
     </table>
   </div>
 </div>
-<script></script>
+<script>
+  $(document).ready(function () {
+    $("#form1").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      console.log(value);
+      $("#table tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+      });
+    });
+  });
+</script>
 
 <%-include("partials/footer")-%>

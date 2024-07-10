@@ -5,7 +5,7 @@
 }
 
 .page-container {
-  position: relative;
+  position: static;
   min-height: 100vh;
 }
 /* .page-container-main {
@@ -18,11 +18,25 @@
 .nav_bar {
   height: 90px;
 }
+.search_bar {
+  width: 20%;
+  height: 5%;
+  margin-left: auto;
+  display: inline;
+}
+
+.top_bar {
+  margin-bottom: 1%;
+}
 
 .alert {
   color: red;
 }
 
+.root_app {
+  margin-bottom: 8%;
+  position: relative;
+}
 .root_login {
   display: flex;
   justify-content: center;
@@ -64,14 +78,13 @@
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
   text-align: center;
   width: 100%;
   height: 80px;
   background-color: #eeeeee;
   display: flex;
   justify-content: center;
+  margin-top: 2%;
 }
 
 .footer p {
@@ -108,5 +121,17 @@
   }
   .page-container {
     min-height: 120vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .all_header {
+    text-align: center;
+    width: 100%;
+  }
+  .search_bar {
+    width: 80%;
+    height: 5%;
+    margin-right: auto;
   }
 }

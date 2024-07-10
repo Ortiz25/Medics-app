@@ -1,4 +1,4 @@
-import { Appointment, User, Doctor } from "../server.js";
+import { Appointment, User, Doctor } from "./db.js";
 
 export async function deregisterDoctor(id) {
   try {
