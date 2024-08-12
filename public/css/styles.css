@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+.svg {
+  transform: rotate(-90deg);
+}
+
 .page-container {
   position: static;
   min-height: 100vh;

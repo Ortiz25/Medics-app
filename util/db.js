@@ -16,6 +16,8 @@ const docSchema = new mongoose.Schema({
   Doctor_id: String,
   username: String,
   password: String,
+  googleToken: String,
+  googleEmail: String,
 });
 export const Doc = mongoose.model("Doc", docSchema);
 
@@ -80,8 +82,47 @@ export const Appointment = sequelize.define(
     user_id: DataTypes.INTEGER,
     doctor_id: DataTypes.INTEGER,
     date: DataTypes.DATE,
-    time: DataTypes.TIME,
+    time: DataTypes.STRING,
     status: DataTypes.STRING,
+  },
+  {
+    timestamps: false,
+  }
+);
+
+export const Teleappointment = sequelize.define(
+  "Teleappointment",
+  {
+    appointment_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    user_id: DataTypes.INTEGER,
+    doctor_id: DataTypes.INTEGER,
+    date: DataTypes.DATE,
+    time: DataTypes.STRING,
+    status: DataTypes.STRING,
+  },
+  {
+    timestamps: false,
+  }
+);
+
+export const Googleappointment = sequelize.define(
+  "Googleappointment",
+  {
+    appointment_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    doctor_id: DataTypes.INTEGER,
+    date: DataTypes.DATE,
+    start_time: DataTypes.TIME,
+    end_time: DataTypes.TIME,
+    appointment_info: DataTypes.STRING,
+    google_id: DataTypes.STRING,
   },
   {
     timestamps: false,
@@ -91,5 +132,7 @@ export const Appointment = sequelize.define(
 // Define associations
 Appointment.belongsTo(User, { foreignKey: "user_id", as: "User" });
 Appointment.belongsTo(Doctor, { foreignKey: "doctor_id", as: "Doctor" });
+Teleappointment.belongsTo(User, { foreignKey: "user_id", as: "User" });
+Teleappointment.belongsTo(Doctor, { foreignKey: "doctor_id", as: "Doctor" });
 User.hasMany(Appointment, { foreignKey: "user_id" });
 Doctor.hasMany(Appointment, { foreignKey: "doctor_id" });

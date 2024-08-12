@@ -1,4 +1,4 @@
-import { Appointment, User, Doctor } from "./db.js";
+import { Googleappointment, Appointment, User, Doctor } from "./db.js";
 
 export async function deregisterDoctor(id) {
   try {
@@ -80,6 +80,37 @@ export async function rescheduleAppointment(
     await appointment.save();
 
     console.log("Appointment rescheduled successfully");
+  } catch (error) {
+    console.error("Error rescheduling appointment:", error);
+  }
+}
+
+export async function updateGoogleAppointments({
+  doctor_id,
+  date,
+  start_time,
+  end_time,
+  appointment_info,
+  google_id,
+}) {
+  try {
+    const appointment = await Googleappointment.findOne({
+      where: { google_id: google_id },
+    });
+
+    if (appointment) {
+      return null;
+    }
+    const newAppointment = await Googleappointment.create({
+      doctor_id: doctor_id,
+      date: date,
+      start_time: start_time,
+      end_time: end_time,
+      appointment_info: appointment_info,
+      google_id: google_id,
+    });
+
+    return newAppointment;
   } catch (error) {
     console.error("Error rescheduling appointment:", error);
   }
