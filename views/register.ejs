@@ -1,0 +1,181 @@
+<%-include("partials/headeradmin")-%>
+<div class="container root_login">
+  <div class="card shadow-lg p-3 mb-5 bg-white rounded register">
+    <div class="card-body">
+      <h2 class="card-title login_title">Doctor Registration</h2>
+      <% if (error ) { %>
+      <p class="alert"><%= error %></p>
+      <% } %>
+      <form action="/register" method="post">
+        <div class="row g-2 mb-3">
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control fw-bold"
+                id="docId"
+                name="docId"
+                readonly
+              />
+              <label for="docId" class="fw-bold">Doctor's ID</label>
+            </div>
+          </div>
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                required
+              />
+              <label for="name" class="fw-bold">Doctor's Name</label>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required
+              />
+              <label for="username" class="fw-bold">Username</label>
+            </div>
+          </div>
+          <div class="col-lg">
+            <div class="form-floating">
+              <select
+                class="form-select"
+                id="field"
+                aria-label="Floating label select example"
+                name="field"
+              >
+                <option value="Cardiologist-Heart">Cardiologist-Heart</option>
+                <option value="Orthopedist-Bones">Orthopedist-Bones</option>
+                <option value="Optician-Eyes">Optician-Eyes</option>
+                <option value="Dermatologist-Skin">Dermatologist-Skin</option>
+                <option value="Rheumatologists-arthritis">
+                  Rheumatologists-arthritis
+                </option>
+                <option value="Endocrinologists-Hormones">
+                  Endocrinologists-Hormones
+                </option>
+                <option value="Gynaecologist-Women">Gynaecologist-Women</option>
+                <option value="Psychiatrist-mentalhealth">
+                  Psychiatrist-mentalhealth
+                </option>
+
+                <option value="Neurologist-Brain">Neurologist-Brain</option>
+                <option value="Oncologist-Cancer">Oncologist-Cancer</option>
+                <option value="Pediatrician-kids">Pediatrician-kids</option>
+              </select>
+              <label for="field" class="fw-bold">Field of Practice</label>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                required
+              />
+              <label for="password" class="fw-bold">Password</label>
+            </div>
+          </div>
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="password"
+                class="form-control"
+                id="cpassword"
+                name="cpassword"
+                required
+              />
+              <label for="cpassword" class="fw-bold">Confirm Password</label>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="contact"
+                name="contact"
+                required
+              />
+              <label for="contact" class="fw-bold">Contact</label>
+            </div>
+          </div>
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="location"
+                name="location"
+                required
+              />
+              <label for="location" class="fw-bold">Location</label>
+            </div>
+          </div>
+        </div>
+        <div class="row g-2 mb-3">
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+              <label for="contact" class="fw-bold">Email</label>
+            </div>
+          </div>
+          <div class="col-lg">
+            <div class="form-floating">
+              <input
+                type="text"
+                class="form-control"
+                id="address"
+                name="address"
+                required
+              />
+              <label for="location" class="fw-bold">Physical Address</label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary">Register</button>
+      </form>
+      <!-- <p class="login_txt">Already have an account? <a href="/">Login</a></p> -->
+    </div>
+  </div>
+</div>
+<script>
+  async function getCookieValue(name) {
+    // const regex = new RegExp(`(^| )${name}=([^;]+)`);
+    // const match = document.cookie.match(regex);
+    const docId = document.getElementById("docId");
+    try {
+      const response = await fetch("http://localhost:4000/docIdNum");
+      const data = await response.json();
+      console.log(data);
+      docId.value = +data.number + 1;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  getCookieValue();
+</script>
+<%-include("partials/footer")-%>

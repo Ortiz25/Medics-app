@@ -1,0 +1,111 @@
+<%-include("partials/header")-%>
+
+<div class="root_login">
+  <div class="card login_card shadow-lg p-3  bg-white rounded">
+    <div class="card-body">
+      <h1 class="card-title login_title">
+        Reschedule/Cancel Appointment:</span>
+      </h1>
+      <form action="/edit" method="post">
+        <div class="mb-3">
+          <label for="app_id" class="form-label fw-bold">Appointment ID:</label>
+          <input
+            id="app_id"
+            type="text"
+            class="form-control disabled"
+            aria-describedby="emailHelp"
+            name="app_id"
+            readonly
+          />
+        </div>
+        <div class="mb-3">
+          <label for="user" class="form-label fw-bold">Patient ID:</label>
+          <input
+            id="user"
+            type="text"
+            class="form-control disabled"
+            aria-describedby="emailHelp"
+            name="user"
+            readonly
+          />
+        </div>
+        <div class="mb-3">
+          <label for="date" class="form-label fw-bold">Change Date:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="date"
+            name="date"
+            aria-describedby="emailHelp"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="time" class="form-label fw-bold">Change Time:</label>
+          <input type="time" id="time" name="time" class="form-control"  required/>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Reschedule</button>
+        <button id="btn-cancel" type="button" class="btn btn-outline-danger btn-cancel" onclick="cancelAppointment()" >Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Load the variable from local storage
+    const appointmentId = localStorage.getItem("appointmentID");
+    const userId = localStorage.getItem("UserId");
+
+    // Check if the variable exists in local storage
+    if (appointmentId !== null) {
+      // Get the HTML element where you want to inject the variable
+      const myElement = document.getElementById("app_id");
+      const myElement1 = document.getElementById("user");
+
+
+      // Inject the variable into the HTML element
+      myElement.value = appointmentId;
+      myElement1.value = userId;
+    }
+  });
+
+ async  function cancelAppointment(e){
+    
+    const appointmentId = localStorage.getItem("appointmentID");
+    const userId = localStorage.getItem("UserId");
+    const myElement = document.getElementById("btn-cancel");
+
+    // Construct a FormData instance
+    const formData = {appointmentId:appointmentId, userId:userId}
+      
+   try{
+    console.log("clicked-1");
+    myElement.setAttribute("disabled", "")
+    myElement.innerText = "canceling..."
+    console.log(formData);
+        console.log("disabled attriburte set");
+     const response = await fetch("http://localhost:4000/cancelAppointment", {
+          method: "POST",
+          headers: {
+      "Content-Type": "application/json",
+    },
+      body:JSON.stringify(formData)
+    });
+    const data = await response.json();
+    console.log(data);
+      if(data.message){
+         myElement.removeAttribute("disabled")
+         myElement.innerText = "cancel"
+         window.location.href = "/dashboard"; 
+      }
+      }catch(error){
+        console.log(error);
+      }
+
+    
+
+  }
+</script>
+
+<%-include("partials/footer")-%>
