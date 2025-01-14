@@ -36,6 +36,7 @@
                 aria-label="Floating label select example"
                 name="field"
               >
+<<<<<<< HEAD
               <option value="Cardiologist-Heart">Cardiologist-Heart</option>
               <option value="Orthopedist-Bones">Orthopedist-Bones</option>
               <option value="Optician-Eyes">Optician-Eyes</option>
@@ -54,6 +55,15 @@
               <option value="Neurologist-Brain">Neurologist-Brain</option>
               <option value="Oncologist-Cancer">Oncologist-Cancer</option>
               <option value="Pediatrician-kids">Pediatrician-kids</option>
+=======
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Orthopedist">Orthopedist</option>
+                <option value="Optician">Optician</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Optician">Optician</option>
+                <option value="Gynaecologist">Gynaecologist</option>
+                <option value="Neurologist">Neurologist</option>
+>>>>>>> main
               </select>
               <label for="field" class="fw-bold">Field of Practice</label>
             </div>
@@ -132,7 +142,11 @@
     console.log("clicked-1", myElement);
     myElement.setAttribute("disabled", "")
     myElement.innerText = "Deregistering..."
+<<<<<<< HEAD
      const response = await fetch("http://localhost:4000/deregesterDoc", {
+=======
+     const response = await fetch("https://ussd.livecribauth.com/deregesterDoc", {
+>>>>>>> main
           method: "POST",
           headers: {
       "Content-Type": "application/json",

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { googleappointment as Googleappointment, appointment as Appointment, user as User, doctor as Doctor } from "./db.js";
+=======
+import { Googleappointment, Appointment, User, Doctor } from "./db.js";
+>>>>>>> main
 
 export async function deregisterDoctor(id) {
   try {
@@ -154,6 +158,7 @@ export async function getDocName(docId) {
   }
 }
 
+<<<<<<< HEAD
 export async function createDoctor(
   docId,
   name,
@@ -163,6 +168,9 @@ export async function createDoctor(
   email,
   address
 ) {
+=======
+export async function createDoctor(docId, name, field, contact, location) {
+>>>>>>> main
   try {
     const newDoctor = await Doctor.create({
       doctor_id: docId,
@@ -170,8 +178,11 @@ export async function createDoctor(
       type: field,
       contact_info: contact,
       location: location,
+<<<<<<< HEAD
       email: email,
       address: address,
+=======
+>>>>>>> main
     });
     return newDoctor;
   } catch (error) {
