@@ -3,7 +3,7 @@ dotenv.config();
 import { Sequelize, DataTypes } from "sequelize";
 import mongoose from "mongoose";
 
-// mongodb Database connection
+// mongodb Database connection code
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(
